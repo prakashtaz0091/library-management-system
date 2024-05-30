@@ -1,0 +1,128 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+Login | LMS
+
+{% endblock title %}
+
+{% block internalcss %}
+<style>
+    .login-form{
+        max-width: 600px;
+        margin-left: 20%;
+        margin-top: 10%;
+    }
+    .password-input{
+        position: relative;
+
+        i{
+            position: absolute;
+            right: 10px;
+
+        }
+
+        #eyeSlashBtn{
+            display: none;
+        }
+    }
+
+    .message-info {
+        color: blue;
+        /* ... */
+      }
+      
+      .message-warning {
+        color: orange;
+        /* ... */
+      }
+      
+      .message-error {
+        color: red;
+        /* ... */
+      }
+      
+      .message-success {
+        color: green;
+        /* ... */
+      }
+
+</style>
+
+{% endblock internalcss %}
+
+
+{% block messages %}
+{% if messages %}
+  {% for message in messages %}
+    <div class="message-{{ message.tags }}">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+
+{% endblock messages %}
+
+
+{% block sidebar %}{% endblock sidebar %}
+
+{% block page_top_bar %}{% endblock page_top_bar %}
+
+
+{% block content %}
+<div class="container">
+    <form class="login-form" method="post">
+        {% csrf_token %}
+        <h4 class="my-4">Login Form</h4>
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" class="form-control" id="username" name="username" aria-describedby="usernameHelp" required>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <div class="password-input d-flex align-items-center" >
+            <input type="password" class="form-control" name="password" id="password" required>
+            <i id="eyeBtn" class="fa fa-eye"></i>
+            <i id="eyeSlashBtn" class="fa fa-eye-slash"></i>
+
+          </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Login</button>
+        <a href="{% url 'main:signup' %}">Not registered yet?</a>
+    </form>
+
+</div>
+
+{% endblock content %}
+
+
+{% block internaljs %}
+
+    <script>
+        const eyeBtnEl = document.getElementById("eyeBtn")
+        const eyeSlashBtnEl = document.getElementById("eyeSlashBtn")
+        const passwordInputEl = document.getElementById("password")
+
+
+        eyeBtnEl.addEventListener('click', ()=>{
+
+            if (passwordInputEl.type === "password") {
+                passwordInputEl.type = "text";
+                eyeBtnEl.style.display = "none"
+                eyeSlashBtnEl.style.display = "block"
+                
+            }      
+        })
+
+
+              eyeSlashBtnEl.addEventListener('click',()=>{
+                if (passwordInputEl.type === "text") {
+                    passwordInputEl.type = "password";
+                    eyeSlashBtnEl.style.display = "none"
+                    eyeBtnEl.style.display = "block"
+                    
+                }   
+              })
+
+    </script>
+{% endblock internaljs %}
