@@ -1,22 +1,35 @@
-{% extends 'main/base.html' %}
+{% extends 'main/base.html' %} {% load static %} 
+{% block page_top_bar %}
 
+{% endblock page_top_bar %} 
+{% block title %} Dashboard | LMS {% endblock title %}
+{% block internalcss %}
+<style>
+  .profile-pic {
+    height: 40px;
+    width: 40px;
 
-{% block sidebar %}{% endblock sidebar %}
+    img {
+      height: inherit;
+      width: inherit;
+    }
+  }
+</style>
 
-{% block page_top_bar %}{% endblock page_top_bar %}
-
-{% block title %}
-
-Dashboard | LMS
-{% endblock title %}
-
+{% endblock internalcss %} 
 {% block messages %}
 
-{{ request.user.username }}
+<div class="d-flex gap-2">
+  <a class="profile-pic" href="{% url 'main:profile' %}">
+    <img
+      src="{% static 'main/assets/images/profile-default.webp' %}"
+      alt="{{request.user.username}}"
+    />
+  </a>
 
-<a  class="btn btn-danger" href="{% url 'main:logout' %}">
+  <a class="btn btn-danger" href="{% url 'main:logout' %}">
     <i class="fa fa-sign-out"></i>
-
-</a>
+  </a>
+</div>
 
 {% endblock messages %}

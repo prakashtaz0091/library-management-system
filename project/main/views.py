@@ -4,6 +4,13 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
+
+
+@login_required
+def profile_view(request):
+    return render(request, 'main/profile.html')
+
+
 @login_required
 def dashboard(request):
     return render(request, 'main/dashboard.html')
