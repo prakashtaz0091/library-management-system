@@ -15,4 +15,7 @@ urlpatterns = [
 
     #profile
     path('profile/', views.profile_view, name="profile"),
+
+    #upload profile pic
+    path('profile-picture/upload/', views.profile_pic_upload, name="profile_pic_upload"),
 ]

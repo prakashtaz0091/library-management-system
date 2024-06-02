@@ -4,10 +4,41 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from . helpers import is_valid_phone_number
+from django.views.decorators.http import require_http_methods
 
 from . import models
 
 
+
+
+@require_http_methods(["POST"])
+@login_required
+def profile_pic_upload(request):
+    print(request.method,"*****************************")
+    if request.method == "POST":
+        image = request.FILES.get('profile_img')
+
+        if image:
+            try:
+                profile = models.Profile.objects.get(user=request.user)
+            except models.Profile.DoesNotExist:
+                profile = models.Profile.objects.create(user=request.user)
+
+            if profile:
+                profile.image = image
+                profile.save()
+                messages.success(request, 'Profile picture updated successfully')
+                return redirect('main:profile', permanent=True)
+            else:
+                messages.error(request, 'Error updating profile picture, profile not found')
+                return redirect('main:profile', permanent=True)    
+        
+        else:
+            messages.error(request, 'Error updating profile picture')
+            return redirect('main:profile', permanent=True)
+            
+
+    
 
 
 @login_required
@@ -37,13 +68,17 @@ def profile_view(request):
         user.last_name = last_name if last_name!="" else user.last_name
         user.save()
 
-        
-        models.Profile.objects.create(
-            user=user,
-            mobile_number=mobile_number
-        )
+        try:
+            profile = models.Profile.objects.get(user=request.user)
+            profile.mobile_number = mobile_number
+            profile.save()
+        except models.Profile.DoesNotExist:
+            models.Profile.objects.create(
+                user=user,
+                mobile_number=mobile_number
+            )
 
-       
+        messages.success(request, 'Profile updated successfully')
         return redirect('main:profile', permanent=True)
 
 

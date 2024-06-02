@@ -40,13 +40,40 @@
         <div class="container rounded bg-white mt-5 mb-5">
             <div class="row">
                 <div class="col-md-3 border-right">
-                    <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span class="font-weight-bold">
+                    <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+
+                        {% if request.user.profile.image %}
+                        <img class="rounded-circle mt-5" width="150px" src="{{ request.user.profile.image.url }}" alt="userimage">
+
+
+                        {% else %}
+                        <img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg">
+
+                        <form action="{% url 'main:profile_pic_upload' %}" method="post" enctype="multipart/form-data" >
+                            {% csrf_token %}
+                            <input type="file" name="profile_img" id="profile_img">
+
+                            <button type="submit" class="btn btn-primary">Upload</button>
+
+                        </form>
+
+
+                        {% endif %}
+                        
+                        
+                        
+                        <span class="font-weight-bold">
 
 
                         {% if request.user.first_name %}
-                        {{ request.user.first_name }} | Profile
+                        {{ request.user.first_name }} | Profile {% if request.user.profile.is_librarian %}
+                        |  Librarian
+                            {% endif %}
                     {% else %}
-                    {{request.user.username}} | Profile
+                    {{request.user.username}} | Profile  {% if request.user.profile.is_librarian %}
+                           |  Librarian
+                    
+                    {% endif %}
                 
                     {% endif %}
                     </span><span class="text-black-50">
