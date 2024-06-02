@@ -18,4 +18,10 @@ urlpatterns = [
 
     #upload profile pic
     path('profile-picture/upload/', views.profile_pic_upload, name="profile_pic_upload"),
+
+
+    #add book
+    path('books/', views.books_view, name='books_view'),
+
+    # path('book/<str:book_id>', views.book_update, name='book_update')
 ]

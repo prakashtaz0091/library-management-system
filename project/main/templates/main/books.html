@@ -1,0 +1,181 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Add Book
+
+{% endblock title %}
+
+{% block page_name %} Books {% endblock page_name %}
+
+{% block page_top_bar_end_section %}
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBookModal">
+   Add
+  </button>
+
+
+    <!-- Button trigger modal -->
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="addBookModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addBookModalLabel">Add New Book</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="" method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name" aria-describedby="nameHelp" required>
+              </div>
+            <div class="mb-3">
+                <label for="author" class="form-label">Author</label>
+                <input type="text" class="form-control" id="author" name="author" aria-describedby="authorHelp" required>
+              </div>
+            <div class="mb-3">
+                <label for="class" class="form-label">Class</label>
+                <input type="text" class="form-control" id="class" name="class" aria-describedby="classHelp" required>
+              </div>
+            <div class="mb-3">
+                <label for="stock" class="form-label">Stock</label>
+                <input type="number" class="form-control" id="stock" name="stock" aria-describedby="stockHelp" required>
+              </div>
+            <div class="mb-3">
+                <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="category">
+                    {% for category in categories %}
+
+                    {% if forloop.first %}
+                    <option value="{{ category }}" selected>{{category}}</option>
+
+                    {% else %}
+                    <option value="{{ category }}">{{category}}</option>
+                    {% endif %}
+                    
+                    {% endfor %}
+                  </select>
+              </div>
+              <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary">Add </button>
+
+
+          </form>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+{% endblock page_top_bar_end_section %}
+
+
+
+
+{% block content %}
+
+<table class="table table-stripped">
+  <thead>
+    <tr>
+      <th scope="col">SN</th>
+      <th scope="col">Book ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Author</th>
+      <th scope="col">Stock</th>
+      <th scope="col">Category</th>
+      <th scope="col">Description</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for book in books %}
+    <tr>
+      <th scope="row">{{forloop.counter}}</th>
+      <td>{{book.id}}</td>
+      <td>{{book.name}}</td>
+      <td>{{book.author}}</td>
+      <td>{{book.stock}}</td>
+      <td>{{book.category}}</td>
+      <td>{{book.description}}</td>
+      <td>
+        <div class="d-flex justify-content-center gap-2 align-items-center">
+          <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#book-{{book.id}}">
+            Update
+           </button>
+         
+         
+             <!-- Button trigger modal -->
+         
+           
+           <!-- Modal -->
+           <div class="modal fade" id="book-{{book.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="book-{{book.id}}Label" aria-hidden="true">
+             <div class="modal-dialog">
+               <div class="modal-content">
+                 <div class="modal-header">
+                   <h5 class="modal-title" id="book-{{book.id}}Label">Update Book</h5>
+                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                 </div>
+                 <div class="modal-body">
+                   <form action="{% url 'main:book_update' book.id %}" method="post">
+                     {% csrf_token %}
+         
+                     <div class="mb-3">
+                         <label for="name" class="form-label">Name</label>
+                         <input type="text" class="form-control" id="name" value="{{book.name}}" name="name" aria-describedby="nameHelp" required>
+                       </div>
+                     <div class="mb-3">
+                         <label for="author" class="form-label">Author</label>
+                         <input type="text" class="form-control" id="author" name="author" aria-describedby="authorHelp" required>
+                       </div>
+                     <div class="mb-3">
+                         <label for="class" class="form-label">Class</label>
+                         <input type="text" class="form-control" id="class" name="class" aria-describedby="classHelp" required>
+                       </div>
+                     <div class="mb-3">
+                         <label for="stock" class="form-label">Stock</label>
+                         <input type="number" class="form-control" id="stock" name="stock" aria-describedby="stockHelp" required>
+                       </div>
+                     <div class="mb-3">
+                         <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="category">
+                             {% for category in categories %}
+         
+                             {% if forloop.first %}
+                             <option value="{{ category }}" selected>{{category}}</option>
+         
+                             {% else %}
+                             <option value="{{ category }}">{{category}}</option>
+                             {% endif %}
+                             
+                             {% endfor %}
+                           </select>
+                       </div>
+                       <div class="mb-3">
+                         <label for="description" class="form-label">Description</label>
+                         <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                       </div>
+         
+                       <button type="submit" class="btn btn-primary">Add </button>
+         
+         
+                   </form>
+                 </div>
+                 
+               </div>
+             </div>
+           </div>
+          <a href="" class="btn btn-danger">Delete</a>
+        </div>
+
+      </td>
+    </tr>
+    
+    {% endfor %}
+    
+  </tbody>
+</table>
+
+{% endblock content %}

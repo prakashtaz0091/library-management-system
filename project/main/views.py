@@ -7,8 +7,45 @@ from . helpers import is_valid_phone_number
 from django.views.decorators.http import require_http_methods
 
 from . import models
+from .models import Book
 
 
+
+
+
+@login_required
+def books_view(request):
+
+    if request.method=="POST":
+        form_data = request.POST
+        name = form_data['name']
+        author = form_data['author']
+        class_ = form_data['class']
+        stock = form_data['stock']
+        category = form_data['category']
+        description = form_data['description']
+
+        book = Book()
+        book.name = name
+        book.author = author
+        book.c_class = class_
+        book.stock = stock
+        book.category = category
+        book.description = description
+        book.save()
+
+        messages.success(request, 'Book added successfully')
+        return redirect('main:books_view', permanent=True)
+
+
+    #getting categories to show in form
+    categories = Book.get_categories()
+    books = Book.objects.all()
+    context = {
+        'categories': categories,
+        'books': books
+    }
+    return render(request, 'main/books.html', context)
 
 
 @require_http_methods(["POST"])

@@ -361,6 +361,14 @@
                 Dashboard
               </a>
             </li>
+            {% if request.user.profile.is_librarian %}
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="{% url 'main:books_view' %}">
+                <svg class="bi"><use xlink:href="#house-fill"/></svg>
+                Books
+              </a>
+            </li>
+            {% endif %}
             
           </ul>
 
@@ -380,7 +388,7 @@
 
         </h1>
         <div class="btn-toolbar mb-2 mb-md-0">
-         
+         {% block page_top_bar_end_section %}{% endblock page_top_bar_end_section %}
         </div>
       </div>
       {% endblock page_top_bar %}

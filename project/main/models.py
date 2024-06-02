@@ -47,6 +47,10 @@ class Book(models.Model):
         return self.name + ' by ' + self.author
     
 
+    @classmethod
+    def get_categories(cls):
+        return [category for category, _ in cls.category_choices]
+
     #custom method
 
 
