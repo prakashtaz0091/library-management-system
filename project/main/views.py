@@ -3,11 +3,50 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from . helpers import is_valid_phone_number
+
+from . import models
+
 
 
 
 @login_required
 def profile_view(request):
+    if request.method=="POST":
+        # print(request.POST)
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        mobile_number = request.POST['mobile_number']
+
+
+
+
+        if not is_valid_phone_number(mobile_number):
+            messages.error(request, 'Please enter a valid phone number')
+            return redirect('main:profile', permanent=True)
+
+        if (request.user.first_name == "" or request.user.last_name == ""):
+            if len(first_name) < 2  or len(last_name) < 2:
+                messages.error(request, 'First and last names must be at least 2 characters long')
+                return redirect('main:profile', permanent=True)
+
+
+
+        user = request.user
+        user.first_name = first_name if first_name!="" else user.first_name
+        user.last_name = last_name if last_name!="" else user.last_name
+        user.save()
+
+        
+        models.Profile.objects.create(
+            user=user,
+            mobile_number=mobile_number
+        )
+
+       
+        return redirect('main:profile', permanent=True)
+
+
     return render(request, 'main/profile.html')
 
 

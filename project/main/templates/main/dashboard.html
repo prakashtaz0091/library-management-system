@@ -3,33 +3,5 @@
 
 {% endblock page_top_bar %} 
 {% block title %} Dashboard | LMS {% endblock title %}
-{% block internalcss %}
-<style>
-  .profile-pic {
-    height: 40px;
-    width: 40px;
 
-    img {
-      height: inherit;
-      width: inherit;
-    }
-  }
-</style>
 
-{% endblock internalcss %} 
-{% block messages %}
-
-<div class="d-flex gap-2">
-  <a class="profile-pic" href="{% url 'main:profile' %}">
-    <img
-      src="{% static 'main/assets/images/profile-default.webp' %}"
-      alt="{{request.user.username}}"
-    />
-  </a>
-
-  <a class="btn btn-danger" href="{% url 'main:logout' %}">
-    <i class="fa fa-sign-out"></i>
-  </a>
-</div>
-
-{% endblock messages %}

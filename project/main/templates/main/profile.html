@@ -1,63 +1,26 @@
 {% extends 'main/base.html' %}
-
+{% comment %} {% load static %} {% endcomment %}
 {% block title %}
     
 {{request.user.username}} | Profile
 
 {% endblock title %}
 
-{% block internalcss %}
+{% block messages %}
+
+<div class="messages">
     
-    <style>
+{% if messages %}
+{% for message in messages %}
+  <div class="message-{{ message.tags }}">
+    {{ message }}
+  </div>
+{% endfor %}
+{% endif %}
+</div>
 
-        .profile-info{
-               
-.form-control:focus {
-    box-shadow: none;
-    border-color: #BA68C8
-}
+{% endblock messages %}
 
-.profile-button {
-    background: rgb(99, 39, 120);
-    box-shadow: none;
-    border: none
-}
-
-.profile-button:hover {
-    background: #682773
-}
-
-.profile-button:focus {
-    background: #682773;
-    box-shadow: none
-}
-
-.profile-button:active {
-    background: #682773;
-    box-shadow: none
-}
-
-.back:hover {
-    color: #682773;
-    cursor: pointer
-}
-
-.labels {
-    font-size: 11px
-}
-
-.add-experience:hover {
-    background: #BA68C8;
-    color: #fff;
-    cursor: pointer;
-    border: solid 1px #BA68C8
-}
-        }
-
-    </style>
-
-
-{% endblock internalcss %}
 
 
 {% block page_name %}
@@ -101,16 +64,25 @@
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h4 class="text-right">Profile Info</h4>
                         </div>
+                        <form action="" method="post" >
+                            {% csrf_token %}
                         <div class="row mt-2">
-                            <div class="col-md-6"><label class="labels">Name</label><input type="text" class="form-control" placeholder="{% if request.user.first_name %}{{ request.user.first_name }}{% else %}Add first name
-                                {% endif %}"  value=""></div>
-                            <div class="col-md-6"><label class="labels">Surname</label><input type="text" class="form-control" value="" placeholder="{% if request.user.last_name %}{{ request.user.last_name }}{% else %}Add last name
+
+                            <div class="col-md-6"><label class="labels">Name</label><input minlength="2" name="first_name" type="text" class="form-control" placeholder="{% if request.user.first_name %}{{ request.user.first_name }}{% else %}Add first name
+                                {% endif %}"  value="" ></div>
+                            <div class="col-md-6"><label class="labels">Surname</label><input minlength="2" name="last_name" type="text" class="form-control" value="" placeholder="{% if request.user.last_name %}{{ request.user.last_name }}{% else %}Add last name
                                 {% endif %}" ></div>
                         </div>
                         <div class="row mt-3">
-                            <div class="col-md-12"><label class="labels">Mobile Number</label><input type="text" class="form-control" placeholder="enter phone number" value=""></div>
+                            <div class="col-md-12"><label class="labels">Mobile Number</label><input name="mobile_number" type="text" class="form-control" placeholder="{% if request.user.profile.mobile_number %}{{ request.user.profile.mobile_number }}{% else %}enter phone number
+                                {% endif %}" value=""></div>
                             
                         </div>
+
+                        <button class="btn btn-primary mt-3">
+                            Update
+                        </button>
+                    </form>
                         
                     </div>
                 </div>

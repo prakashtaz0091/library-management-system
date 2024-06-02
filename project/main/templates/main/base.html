@@ -105,7 +105,89 @@
       .bd-mode-toggle .dropdown-menu .active .bi {
         display: block !important;
       }
+
+      
+      .profile-info{
+               
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #BA68C8
+        }
+        
+        .profile-button {
+            background: rgb(99, 39, 120);
+            box-shadow: none;
+            border: none
+        }
+        
+        .profile-button:hover {
+            background: #682773
+        }
+        
+        .profile-button:focus {
+            background: #682773;
+            box-shadow: none
+        }
+        
+        .profile-button:active {
+            background: #682773;
+            box-shadow: none
+        }
+        
+        .back:hover {
+            color: #682773;
+            cursor: pointer
+        }
+        
+        .labels {
+            font-size: 11px
+        }
+        
+        .add-experience:hover {
+            background: #BA68C8;
+            color: #fff;
+            cursor: pointer;
+            border: solid 1px #BA68C8
+        }
+                }
+
+                .profile-pic {
+                  height: 40px;
+                  width: 40px;
+              
+                  img {
+                    height: inherit;
+                    width: inherit;
+                  }
+                }
+
+                .message-info {
+                  color: blue;
+                  /* ... */
+                }
+                
+                .message-warning {
+                  color: orange;
+                  /* ... */
+                }
+                
+                .message-error {
+                  color: red;
+                  /* ... */
+                }
+                
+                .message-success {
+                  color: green;
+                  /* ... */
+                }
     </style>
+
+
+    
+
+
+    
+
 
      {% block internalcss %}{% endblock internalcss %}
     
@@ -218,7 +300,7 @@
 </svg>
 
 <header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
-  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="#">Library Management System</a>
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="{% url 'main:dashboard' %}">Library Management System</a>
 
   <ul class="navbar-nav flex-row d-md-none">
     <li class="nav-item text-nowrap">
@@ -237,8 +319,26 @@
     <input class="form-control w-100 rounded-0 border-0" type="text" placeholder="Search" aria-label="Search">
   </div>
 
-  <div class="me-3" >
-    {% block messages %}{% endblock messages %}
+  <div class="me-3 d-flex gap-2 align-items-center" >
+    {% block messages %}
+    
+    
+    {% endblock messages %}
+    {% if request.user.is_authenticated %}
+    <div class="d-flex gap-2">
+      <a class="profile-pic" href="{% url 'main:profile' %}">
+        <img
+          src="{% static 'main/assets/images/profile-default.webp' %}"
+          alt="{{request.user.username}}"
+        />
+      </a>
+    
+      <a class="btn btn-danger" href="{% url 'main:logout' %}">
+        <i class="fa fa-sign-out"></i>
+      </a>
+    </div>
+    {% endif %}
+    
   </div>
   
 
@@ -256,7 +356,7 @@
         <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="#">
+              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="{% url 'main:dashboard' %}">
                 <svg class="bi"><use xlink:href="#house-fill"/></svg>
                 Dashboard
               </a>
