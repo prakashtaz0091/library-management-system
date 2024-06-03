@@ -10,10 +10,113 @@ from django.http import HttpResponse
 from . import models
 from .models import Book
 
+from . decorators import has_to_be_librarian
+
 
 
 @login_required
+@has_to_be_librarian
+def checkouts(request):
+
+    if request.method == "POST":
+
+        form_data = request.POST
+        user = User.objects.get(username=form_data['username'])
+        book = Book.objects.get(id=form_data['book_id'])
+        book_isbns = models.Book_ISBN.objects.filter(book=book).filter(issued=False)
+
+        if book_isbns[0] is not None:
+            new_checkout = models.Checkout(
+                user = user,
+                book_isbn = book_isbns[0],
+            )
+            new_checkout.save(librarian=request.user)
+
+
+            book_isbns[0].issused = True
+            book.stock = book.stock-1
+            book_isbns[0].save()
+            book.save()
+
+            messages.success(request, 'Book checked out successfully')
+            return redirect('main:checkouts', permanent=True)
+
+        messages.error(request, 'Book out of stock')
+        return redirect('main:checkouts', permanent=True)
+
+
+
+    books = Book.objects.all()
+    profiles = models.Profile.objects.filter(is_librarian=False)
+    checkouts = models.Checkout.objects.all()
+    context = {
+        'books': books,
+        'profiles': profiles,
+        'checkouts':checkouts
+    }
+
+    return render(request, 'main/book_checkouts.html', context)
+
+
+@login_required
+@has_to_be_librarian
+def book_request_view(request):
+    requests = models.BookRequest.objects.all()
+
+    context = {
+        'requests': requests,
+    }
+
+    return render(request, 'main/book_requests.html', context)
+
+
+
+@login_required
+def add_book_request(request, book_id):
+
+    try:
+
+        try:
+            book = Book.objects.get(id=book_id)
+            book_request = models.BookRequest.objects.filter(book=book).filter(user=request.user)
+            if book_request:
+                messages.error(request, 'Book already requested')
+                return redirect('main:books_view_user')
+
+        except models.BookRequest.DoesNotExist:
+            pass
+
+        models.BookRequest.objects.create(
+            user = request.user,
+            book = book
+        )
+
+        messages.success(request, 'Book requested successfully')    
+
+        return redirect("main:books_view_user")
+    
+
+    except Book.DoesNotExist:
+        messages.error(request, 'Book not found')
+        return redirect('main:books_view_user')
+
+
+
+@login_required
+def books_view_user(request):
+    books = Book.objects.all()
+    context = {
+        'books':books,
+    }
+    return render(request, 'main/books.html', context)
+
+
+
+
+@login_required
+@has_to_be_librarian
 def book_delete(request, book_id):
+    print("accessed delete")
     try:
         book = Book.objects.get(id=book_id)
         book.delete()
@@ -25,6 +128,7 @@ def book_delete(request, book_id):
 
 
 @login_required
+@has_to_be_librarian
 def book_update(request, book_id):
 
     if request.method == "POST":
@@ -48,6 +152,7 @@ def book_update(request, book_id):
     return HttpResponse("Wrong request",status=400)
 
 @login_required
+@has_to_be_librarian
 def books_view(request):
 
     if request.method=="POST":
@@ -68,7 +173,13 @@ def books_view(request):
         book.description = description
         book.save()
 
-        messages.success(request, 'Book added successfully')
+        for i in range(0, int(stock)):
+            models.Book_ISBN.objects.create(
+                book = book
+            )
+
+
+        messages.success(request, 'Book added successfully, auto added ISBNs')
         return redirect('main:books_view', permanent=True)
 
 

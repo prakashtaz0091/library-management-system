@@ -1,0 +1,81 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+
+Book Requests
+{% endblock title %}
+
+{% block page_name %}
+Book Requests
+
+
+{% endblock page_name %}
+
+
+
+{% block messages %}
+
+<div class="messages">
+    
+  {% if messages %}
+  {% for message in messages %}
+    <div class="message-{{ message.tags }}">
+      {{ message }}
+    </div>
+  {% endfor %}
+  {% endif %}
+  </div>
+  
+
+{% endblock messages %}
+
+{% block page_top_bar_end_section %}
+{% endblock page_top_bar_end_section %}
+
+
+{% block content %}
+<table class="table table-stripped">
+    <thead>
+      <tr>
+        <th scope="col">SN</th>
+        <th scope="col">Book ID</th>
+        <th scope="col">Book Name</th>
+        <th scope="col">Requested By</th>
+        <th scope="col">Book Stock</th>
+        <th scope="col">Actions</th>
+        {% comment %} <th scope="col">Category</th> {% endcomment %}
+        {% comment %} <th scope="col">Description</th>
+        <th scope="col">Actions</th> {% endcomment %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for book_request in requests %}
+      <tr>
+        <th scope="row">{{forloop.counter}}</th>
+        <td>{{book_request.id}}</td>
+        <td>{{book_request.book.name}}</td>
+        <td>
+
+            {% if book_request.user.first_name %}
+                {{book_request.user.first_name}} &nbsp; {{book_request.user.last_name}}
+            {% else %}
+            {{book_request.user.first_name}}
+            {% endif %}
+        </td>
+        <td>{{book_request.book.stock}}</td>
+        {% comment %} <td>{{book.category}}</td>
+        <td>{{book.description}}</td> {% endcomment %}
+        <td>
+          <div class="d-flex justify-content-center gap-2 align-items-center">
+            <a href="" class="btn btn-success">Accept</a>
+            <a href="" class="btn btn-danger">Reject</a>
+          </div>
+  
+        </td>
+      </tr>
+      
+      {% endfor %}
+      
+    </tbody>
+  </table>
+{% endblock content %}

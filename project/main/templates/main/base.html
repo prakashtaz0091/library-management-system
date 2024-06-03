@@ -368,6 +368,26 @@
                 Books
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="{% url 'main:book_request_view' %}">
+                <svg class="bi"><use xlink:href="#house-fill"/></svg>
+                Book Requests
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="{% url 'main:checkouts' %}">
+                <svg class="bi"><use xlink:href="#house-fill"/></svg>
+                Book Checkouts
+              </a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="{% url 'main:books_view_user' %}">
+                <svg class="bi"><use xlink:href="#house-fill"/></svg>
+                Books
+              </a>
+            </li>
+
             {% endif %}
             
           </ul>

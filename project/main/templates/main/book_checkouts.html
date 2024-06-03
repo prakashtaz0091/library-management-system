@@ -1,0 +1,136 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+
+Book Checkouts
+{% endblock title %}
+
+{% block page_name %}
+Book Checkouts
+
+
+{% endblock page_name %}
+
+
+
+{% block messages %}
+
+<div class="messages">
+    
+  {% if messages %}
+  {% for message in messages %}
+    <div class="message-{{ message.tags }}">
+      {{ message }}
+    </div>
+  {% endfor %}
+  {% endif %}
+  </div>
+  
+
+{% endblock messages %}
+
+{% block page_top_bar_end_section %}
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBookModal">
+    Checkout
+   </button>
+ 
+ 
+     <!-- Button trigger modal -->
+ 
+   
+   <!-- Modal -->
+   <div class="modal fade" id="addBookModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
+     <div class="modal-dialog">
+       <div class="modal-content">
+         <div class="modal-header">
+           <h5 class="modal-title" id="addBookModalLabel">New Checkout</h5>
+           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+           <form action="" method="post">
+             {% csrf_token %}
+ 
+             
+             <div class="mb-3">
+                 <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="book_id">
+                     {% for book in books %}
+ 
+                     {% if forloop.first %}
+                     <option value="{{ book.id }}" selected>{{book.name}}</option>
+ 
+                     {% else %}
+                     <option value="{{ book.id }}">{{book.name}}</option>
+                     {% endif %}
+                     
+                     {% endfor %}
+                   </select>
+               </div>
+             <div class="mb-3">
+                 <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="username">
+                     {% for profile in profiles %}
+ 
+                     {% if forloop.first %}
+                     <option value="{{ profile.user.username }}" selected>{{ profile.user.username }}</option>
+ 
+                     {% else %}
+                     <option value="{{ profile.user.username }}">{{ profile.user.username }}</option>
+                     {% endif %}
+                     
+                     {% endfor %}
+                   </select>
+               </div>
+               
+ 
+               <button type="submit" class="btn btn-primary">Add </button>
+ 
+ 
+           </form>
+         </div>
+         
+       </div>
+     </div>
+   </div>
+ 
+
+{% endblock page_top_bar_end_section %}
+
+
+{% block content %}
+<table class="table table-stripped">
+    <thead>
+      <tr>
+        <th scope="col">SN</th>
+        <th scope="col">Checkout ID</th>
+        <th scope="col">Book ISBN</th>
+        <th scope="col">Book Name</th>
+        <th scope="col">User</th>
+        <th scope="col">Issued Date</th>
+        <th scope="col">Expiry Date</th>
+        <th scope="col">Issued By</th>
+        <th scope="col">Actions</th>
+        {% comment %} <th scope="col">Category</th> {% endcomment %}
+        {% comment %} <th scope="col">Description</th>
+        <th scope="col">Actions</th> {% endcomment %}
+      </tr>
+    </thead>
+    <tbody> 
+
+      {% for checkout in checkouts %}
+      <tr>
+      <td scope="col">{{forloop.counter}}</td>
+        <td scope="col">{{checkout.id}}</td>
+        <td scope="col">{{checkout.book_isbn.id}}</td>
+        <td scope="col">{{checkout.book_isbn.book.name}}</td>
+        <td scope="col">{{checkout.user.username}}</td>
+        <td scope="col">{{checkout.created_at}}</td>
+        <td scope="col">Expiry Date</td>
+        <td scope="col">{{checkout.issued_by.username}}</td>
+
+      </tr>
+      {% endfor %}
+      
+      
+    </tbody>
+  </table>
+{% endblock content %}

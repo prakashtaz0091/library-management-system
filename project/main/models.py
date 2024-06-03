@@ -3,6 +3,11 @@ from django.contrib.auth.models import User
 import datetime
 
 
+
+
+
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     image = models.ImageField(upload_to='profile_pics', blank=True, null=True)
@@ -56,12 +61,13 @@ class Book(models.Model):
 
 
 class Book_ISBN(models.Model):
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='isbns')
     created_at = models.DateTimeField(auto_now_add=True)
+    issued = models.BooleanField(default=False)
 
 
     def __str__(self):
-        return self.book.name + ' | ISBN: ' + self.id
+        return self.book.name + ' | ISBN: ' + str(self.id)
     
 
 
@@ -71,11 +77,12 @@ class Checkout(models.Model):
     book_isbn = models.ForeignKey(Book_ISBN, on_delete=models.DO_NOTHING, null=True, related_name='checkouts')
     issued_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='checkouts_done', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    expiry_date = models.DateTimeField()
+    expiry_date = models.DateTimeField(blank=True, null=True)
 
 
     def set_expiry_date(self):
-        self.expiry_date = self.created_at + datetime.timedelta(days=14)
+        # self.expiry_date = self.created_at + datetime.timedelta(days=14)
+        return None
 
 
     def set_issued_by(self, user):
@@ -89,10 +96,16 @@ class Checkout(models.Model):
     def save(self, *args, **kwargs):
         self.set_expiry_date()
 
-        # self.set_issued_by(self.user)
+        self.set_issued_by(kwargs.pop('librarian', None))
 
         super(Checkout, self).save(*args, **kwargs)
 
 
 
-        
+class BookRequest(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='book_requests')
+    book = models.ForeignKey(Book, on_delete=models.DO_NOTHING , related_name='requests')
+    requested_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username + ' requested ' + self.book.name
