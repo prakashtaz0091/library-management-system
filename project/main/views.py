@@ -5,13 +5,47 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from . helpers import is_valid_phone_number
 from django.views.decorators.http import require_http_methods
+from django.http import HttpResponse
 
 from . import models
 from .models import Book
 
 
 
+@login_required
+def book_delete(request, book_id):
+    try:
+        book = Book.objects.get(id=book_id)
+        book.delete()
+        messages.success(request, 'Book deleted successfully')
+        return redirect('main:books_view', permanent=True)
+    except:
+        messages.error(request, 'Book not found')
+        return redirect('main:books_view', permanent=True)
 
+
+@login_required
+def book_update(request, book_id):
+
+    if request.method == "POST":
+        try:
+            book = Book.objects.get(id=book_id)
+            book.name = request.POST['name']
+            book.author = request.POST['author']
+            book.c_class = request.POST['class']
+            book.stock = request.POST['stock']
+            book.category = request.POST['category']
+            book.description = request.POST['description']
+            book.save()
+            messages.success(request, 'Book updated successfully')
+            return redirect('main:books_view', permanent=True)
+        except Book.DoesNotExist:
+            messages.error(request, 'Book not found')
+            return redirect('main:books_view', permanent=True)
+
+
+    
+    return HttpResponse("Wrong request",status=400)
 
 @login_required
 def books_view(request):

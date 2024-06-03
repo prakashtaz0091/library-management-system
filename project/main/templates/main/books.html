@@ -129,25 +129,36 @@
                        </div>
                      <div class="mb-3">
                          <label for="author" class="form-label">Author</label>
-                         <input type="text" class="form-control" id="author" name="author" aria-describedby="authorHelp" required>
+                         <input type="text" class="form-control" id="author" value="{{book.author}}" name="author" aria-describedby="authorHelp" required>
                        </div>
                      <div class="mb-3">
                          <label for="class" class="form-label">Class</label>
-                         <input type="text" class="form-control" id="class" name="class" aria-describedby="classHelp" required>
+                         <input type="text" class="form-control" id="class" name="class" value="{{book.c_class}}" aria-describedby="classHelp" required>
                        </div>
                      <div class="mb-3">
                          <label for="stock" class="form-label">Stock</label>
-                         <input type="number" class="form-control" id="stock" name="stock" aria-describedby="stockHelp" required>
+                         <input type="number" class="form-control" id="stock" name="stock" value="{{book.stock}}" aria-describedby="stockHelp" required>
                        </div>
                      <div class="mb-3">
                          <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="category">
                              {% for category in categories %}
          
                              {% if forloop.first %}
-                             <option value="{{ category }}" selected>{{category}}</option>
+                             <option value="{{ category }}" 
+                             
+                             {% if book.category == category %}
+                             selected
+                             {% endif %}
+                             
+                             >{{category}}</option>
          
                              {% else %}
-                             <option value="{{ category }}">{{category}}</option>
+                             <option value="{{ category }}" 
+                             {% if book.category == category %}
+                             selected
+                             {% endif %}
+                             
+                             >{{category}}</option>
                              {% endif %}
                              
                              {% endfor %}
@@ -155,10 +166,10 @@
                        </div>
                        <div class="mb-3">
                          <label for="description" class="form-label">Description</label>
-                         <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                         <textarea class="form-control" id="description" name="description" rows="3">{{book.description}}</textarea>
                        </div>
          
-                       <button type="submit" class="btn btn-primary">Add </button>
+                       <button type="submit" class="btn btn-primary">Update </button>
          
          
                    </form>
@@ -167,7 +178,7 @@
                </div>
              </div>
            </div>
-          <a href="" class="btn btn-danger">Delete</a>
+          <a href="{% url 'main:book_delete' book.id %}" class="btn btn-danger">Delete</a>
         </div>
 
       </td>

@@ -23,5 +23,10 @@ urlpatterns = [
     #add book
     path('books/', views.books_view, name='books_view'),
 
-    # path('book/<str:book_id>', views.book_update, name='book_update')
+    #update book_data
+    path('book/update/<str:book_id>', views.book_update, name='book_update'),
+
+    #delete book_data
+    path('book/delete/<str:book_id>', views.book_delete, name='book_delete'),
+
 ]
